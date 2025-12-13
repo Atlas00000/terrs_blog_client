@@ -31,9 +31,17 @@ interface PostsResponse {
   }
 }
 
-async function getPosts(page: number = 1, limit: number = 12): Promise<PostsResponse> {
+async function getPosts(page: number = 1, limit: number = 12, search?: string): Promise<PostsResponse> {
   try {
-    const response = await api.get<PostsResponse>(`/v1/posts?page=${page}&limit=${limit}&status=PUBLISHED`)
+    const params: Record<string, string> = {
+      page: page.toString(),
+      limit: limit.toString(),
+      status: 'PUBLISHED',
+    }
+    if (search && search.trim()) {
+      params.search = search.trim()
+    }
+    const response = await api.get<PostsResponse>('/v1/posts', { params })
     return response
   } catch (error) {
     console.error('Failed to fetch posts:', error)
@@ -52,10 +60,11 @@ async function getPosts(page: number = 1, limit: number = 12): Promise<PostsResp
 export default async function HomePage({
   searchParams,
 }: {
-  searchParams: { page?: string }
+  searchParams: { page?: string; search?: string }
 }) {
   const page = parseInt(searchParams.page || '1', 10)
-  const { data: posts, pagination } = await getPosts(page)
+  const search = searchParams.search || undefined
+  const { data: posts, pagination } = await getPosts(page, 12, search)
 
   return (
     <div className="container py-12">
@@ -69,9 +78,19 @@ export default async function HomePage({
         </p>
       </div>
 
+      {search && (
+        <div className="mb-6">
+          <p className="text-sm text-muted-foreground">
+            Search results for &quot;{search}&quot; ({pagination.total} {pagination.total === 1 ? 'post' : 'posts'})
+          </p>
+        </div>
+      )}
+
       {posts.length === 0 ? (
         <div className="text-center py-12">
-          <p className="text-muted-foreground">No posts found.</p>
+          <p className="text-muted-foreground">
+            {search ? `No posts found for "${search}".` : 'No posts found.'}
+          </p>
         </div>
       ) : (
         <>
@@ -85,7 +104,7 @@ export default async function HomePage({
             <div className="flex justify-center items-center gap-4">
               {page > 1 && (
                 <Button asChild variant="outline">
-                  <a href={`/?page=${page - 1}`}>Previous</a>
+                  <a href={`/?page=${page - 1}${search ? `&search=${encodeURIComponent(search)}` : ''}`}>Previous</a>
                 </Button>
               )}
               <span className="text-sm text-muted-foreground">
@@ -93,7 +112,7 @@ export default async function HomePage({
               </span>
               {page < pagination.totalPages && (
                 <Button asChild variant="outline">
-                  <a href={`/?page=${page + 1}`}>Next</a>
+                  <a href={`/?page=${page + 1}${search ? `&search=${encodeURIComponent(search)}` : ''}`}>Next</a>
                 </Button>
               )}
             </div>
