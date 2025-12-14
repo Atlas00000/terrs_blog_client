@@ -16,6 +16,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
+import { CopyUrlButton } from '@/components/media/copy-url-button'
 
 export default function MediaPage() {
   const [media, setMedia] = useState<Media[]>([])
@@ -94,9 +95,10 @@ export default function MediaPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const filteredMedia = media.filter((item) =>
-    item.originalName.toLowerCase().includes(searchQuery.toLowerCase())
-  )
+  const filteredMedia = media.filter((item) => {
+    const name = item.originalName || item.filename || ''
+    return name.toLowerCase().includes(searchQuery.toLowerCase())
+  })
 
   return (
     <div>
@@ -178,7 +180,7 @@ export default function MediaPage() {
                   {item.thumbnailUrl ? (
                     <Image
                       src={item.thumbnailUrl}
-                      alt={item.originalName}
+                      alt={item.originalName || item.filename || 'Media file'}
                       fill
                       className="object-cover"
                     />
@@ -189,14 +191,15 @@ export default function MediaPage() {
                   )}
                 </div>
                 <div className="mt-2">
-                  <p className="text-xs truncate" title={item.originalName}>
-                    {item.originalName}
+                  <p className="text-xs truncate" title={item.originalName || item.filename || 'Unknown'}>
+                    {item.originalName || item.filename || 'Unknown'}
                   </p>
                   <p className="text-xs text-muted-foreground">
                     {(item.size / 1024).toFixed(1)} KB
                   </p>
                 </div>
-                <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
+                  <CopyUrlButton url={item.url} />
                   <Button
                     variant="destructive"
                     size="sm"
@@ -219,7 +222,7 @@ export default function MediaPage() {
           <DialogHeader>
             <DialogTitle>Delete Media</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete &quot;{mediaToDelete?.originalName}&quot;? This action cannot be undone.
+              Are you sure you want to delete &quot;{mediaToDelete?.originalName || mediaToDelete?.filename || 'this file'}&quot;? This action cannot be undone.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
