@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { postsApi } from '@/lib/api/admin'
-import { FileText, Image, Users, FolderTree, Tags } from 'lucide-react'
+import { FileText, Image, Users, FolderTree, Tags, MessageSquareMore } from 'lucide-react'
 
 interface DashboardStats {
   totalPosts: number
@@ -155,6 +155,23 @@ function AdminDashboard() {
           <CardContent>
             <Button asChild variant="outline" className="w-full">
               <Link href="/admin/users">Manage Users</Link>
+            </Button>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Comments</CardTitle>
+            <CardDescription>Moderate reader feedback</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button asChild variant="outline" className="w-full">
+              <Link href="/admin/comments">
+                <span className="flex items-center justify-center gap-2">
+                  <MessageSquareMore className="h-4 w-4" />
+                  <span>Review Comments</span>
+                </span>
+              </Link>
             </Button>
           </CardContent>
         </Card>

@@ -5,6 +5,8 @@ import Link from 'next/link'
 import { Clock, User, Calendar } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
+import { CommentList } from '@/components/comments/comment-list'
+import { CommentForm } from '@/components/comments/comment-form'
 
 interface Post {
   id: string
@@ -129,6 +131,18 @@ export default async function PostPage({
           className="prose prose-lg dark:prose-invert max-w-none mb-12"
           dangerouslySetInnerHTML={{ __html: post.content }}
         />
+
+        {/* Comments */}
+        <section className="mt-12 space-y-6">
+          <div>
+            <h2 className="text-2xl font-semibold mb-2">Comments</h2>
+            <p className="text-sm text-muted-foreground">
+              Join the discussion. Comments are moderated.
+            </p>
+          </div>
+          <CommentForm slug={post.slug} />
+          <CommentList slug={post.slug} />
+        </section>
 
         {/* Tags */}
         {post.tags.length > 0 && (

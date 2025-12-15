@@ -90,6 +90,32 @@ export interface Media {
   createdAt: string
 }
 
+export interface Comment {
+  id: string
+  content: string
+  authorName: string
+  authorUrl?: string | null
+  parentId?: string | null
+  createdAt: string
+}
+
+export interface AdminComment extends Comment {
+  status: 'PENDING' | 'APPROVED' | 'REJECTED'
+  post?: {
+    id: string
+    title: string
+    slug: string
+  }
+}
+
+export interface CommentCreateInput {
+  content: string
+  parentId?: string
+  authorName: string
+  authorEmail: string
+  authorUrl?: string
+}
+
 export interface PaginatedResponse<T> {
   data: T[]
   pagination: {

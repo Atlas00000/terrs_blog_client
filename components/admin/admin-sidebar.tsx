@@ -10,6 +10,7 @@ import {
   Users,
   FolderTree,
   Tags,
+  MessageSquareMore,
   LogOut,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -35,6 +36,11 @@ const menuItems = [
     title: 'Users',
     href: '/admin/users',
     icon: Users,
+  },
+  {
+    title: 'Comments',
+    href: '/admin/comments',
+    icon: MessageSquareMore,
   },
   {
     title: 'Categories',
