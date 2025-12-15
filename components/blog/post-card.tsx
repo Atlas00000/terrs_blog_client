@@ -18,6 +18,11 @@ interface Post {
 }
 
 export function PostCard({ post }: { post: Post }) {
+  const cacheBustedImage =
+    post.coverImage && process.env.NODE_ENV === 'development'
+      ? `${post.coverImage}${post.coverImage.includes('?') ? '&' : '?'}cb=${Date.now()}`
+      : post.coverImage
+
   const formattedDate = post.publishedAt
     ? new Date(post.publishedAt).toLocaleDateString('en-US', {
         year: 'numeric',
@@ -29,10 +34,10 @@ export function PostCard({ post }: { post: Post }) {
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow">
       <Link href={`/blog/${post.slug}`}>
-        {post.coverImage && (
+        {cacheBustedImage && (
           <div className="relative h-48 w-full overflow-hidden">
             <Image
-              src={post.coverImage}
+              src={cacheBustedImage}
               alt={post.title}
               fill
               className="object-cover"

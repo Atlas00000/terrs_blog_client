@@ -19,7 +19,7 @@ import {
 
 const userSchema = z.object({
   email: z.string().email('Invalid email address'),
-  password: z.string().min(6, 'Password must be at least 6 characters').optional(),
+  password: z.string().min(6, 'Password must be at least 6 characters').optional().or(z.literal('')),
   name: z.string().optional(),
   role: z.enum(['ADMIN', 'EDITOR', 'AUTHOR']),
 })
@@ -58,14 +58,15 @@ export function UserForm({ user, onSuccess, onCancel }: UserFormProps) {
     try {
       if (user) {
         const updateData: any = {
-          email: data.email,
-          name: data.name,
+          // Note: Email cannot be updated via this endpoint (backend schema omits it)
+          name: data.name || undefined,
           role: data.role,
         }
-        if (data.password) {
-          // Note: Backend might not support password update via this endpoint
-          // You may need a separate endpoint for password changes
+        // Remove empty strings to send undefined instead
+        if (updateData.name === '') {
+          updateData.name = undefined
         }
+        console.log('Updating user:', user.id, updateData)
         await usersApi.update(user.id, updateData)
       } else {
         if (!data.password) {
@@ -82,7 +83,11 @@ export function UserForm({ user, onSuccess, onCancel }: UserFormProps) {
       onSuccess()
     } catch (error: any) {
       console.error('Failed to save user:', error)
-      alert(error.response?.data?.error?.message || 'Failed to save user')
+      const errorMessage = error.response?.data?.error?.message || 
+                          error.response?.data?.message || 
+                          error.message || 
+                          'Failed to save user'
+      alert(errorMessage)
     } finally {
       setLoading(false)
     }

@@ -56,8 +56,13 @@ export default function CategoriesPage() {
       setDeleteDialogOpen(false)
       setCategoryToDelete(null)
       fetchCategories()
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to delete category:', error)
+      const message =
+        error?.response?.data?.error?.message ||
+        error?.message ||
+        'Failed to delete category. Make sure it has no active (non-deleted) posts.'
+      alert(message)
     }
   }
 

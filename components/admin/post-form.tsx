@@ -42,6 +42,7 @@ export function PostForm({ postId }: PostFormProps) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [fetching, setFetching] = useState(!!postId)
+  const [fetchError, setFetchError] = useState<string | null>(null)
   const [categories, setCategories] = useState<Category[]>([])
   const [tags, setTags] = useState<Tag[]>([])
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
@@ -52,6 +53,7 @@ export function PostForm({ postId }: PostFormProps) {
     handleSubmit,
     formState: { errors },
     setValue,
+    reset,
     watch,
   } = useForm<PostFormData>({
     resolver: zodResolver(postSchema),
@@ -88,22 +90,46 @@ export function PostForm({ postId }: PostFormProps) {
         setTags(tagsRes.data)
 
         if (postId) {
-          const post = await postsApi.getById(postId)
-          const postData = post.data
-          setValue('title', postData.title)
-          setValue('slug', postData.slug)
-          setValue('excerpt', postData.excerpt || '')
-          setValue('content', postData.content)
-          setValue('coverImage', postData.coverImage || '')
-          setValue('status', postData.status)
-          setSelectedCategories(postData.categories.map((c) => c.id))
-          setSelectedTags(postData.tags.map((t) => t.id))
-          setValue('categoryIds', postData.categories.map((c) => c.id))
-          setValue('tagIds', postData.tags.map((t) => t.id))
+          try {
+            const post = await postsApi.getById(postId)
+            const postData = post.data
+            console.log('Fetched post data:', postData)
+            
+            // Use reset to properly set all form values at once
+            reset({
+              title: postData.title || '',
+              slug: postData.slug || '',
+              excerpt: postData.excerpt || '',
+              content: postData.content || '',
+              coverImage: postData.coverImage || '',
+              status: postData.status || 'DRAFT',
+              categoryIds: postData.categories?.map((c) => c.id) || [],
+              tagIds: postData.tags?.map((t) => t.id) || [],
+            })
+            
+            setSelectedCategories(postData.categories?.map((c) => c.id) || [])
+            setSelectedTags(postData.tags?.map((t) => t.id) || [])
+            setFetchError(null)
+          } catch (postError: any) {
+            console.error('Failed to fetch post:', postError)
+            const errorMessage = postError.response?.data?.error?.message || 
+                                postError.response?.data?.message || 
+                                postError.message || 
+                                'Failed to load post data'
+            setFetchError(errorMessage)
+            alert(`Failed to load post: ${errorMessage}`)
+          }
+          setFetching(false)
+        } else {
           setFetching(false)
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error('Failed to fetch data:', error)
+        const errorMessage = error.response?.data?.error?.message || 
+                            error.response?.data?.message || 
+                            error.message || 
+                            'Failed to load form data'
+        setFetchError(errorMessage)
         setFetching(false)
       }
     }
@@ -146,6 +172,17 @@ export function PostForm({ postId }: PostFormProps) {
     return (
       <div className="text-center py-12">
         <p className="text-muted-foreground">Loading post...</p>
+      </div>
+    )
+  }
+
+  if (fetchError && postId) {
+    return (
+      <div className="text-center py-12">
+        <p className="text-destructive mb-4">Error: {fetchError}</p>
+        <Button variant="outline" onClick={() => window.location.reload()}>
+          Retry
+        </Button>
       </div>
     )
   }

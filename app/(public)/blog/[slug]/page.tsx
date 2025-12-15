@@ -59,6 +59,11 @@ export default async function PostPage({
       })
     : null
 
+  const cacheBustedCover =
+    post.coverImage && process.env.NODE_ENV === 'development'
+      ? `${post.coverImage}${post.coverImage.includes('?') ? '&' : '?'}cb=${Date.now()}`
+      : post.coverImage
+
   return (
     <article className="container py-12">
       <div className="max-w-4xl mx-auto">
@@ -107,10 +112,10 @@ export default async function PostPage({
         </header>
 
         {/* Cover Image */}
-        {post.coverImage && (
+        {cacheBustedCover && (
           <div className="relative h-96 w-full mb-8 rounded-lg overflow-hidden">
             <Image
-              src={post.coverImage}
+              src={cacheBustedCover}
               alt={post.title}
               fill
               className="object-cover"
