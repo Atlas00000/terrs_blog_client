@@ -3,8 +3,9 @@ import Link from 'next/link'
 export function Footer() {
   return (
     <footer className="border-t bg-background">
-      <div className="container py-12 md:py-16">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+      <div className="flex justify-center">
+        <div className="w-full max-w-6xl px-4 py-12 md:py-16">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="space-y-4">
             <h3 className="font-bold text-lg">Terra Industries</h3>
             <p className="text-sm text-muted-foreground">
@@ -66,9 +67,10 @@ export function Footer() {
               </li>
             </ul>
           </div>
-        </div>
-        <div className="mt-8 pt-8 border-t text-center text-sm text-muted-foreground">
-          <p>&copy; {new Date().getFullYear()} Terra Industries. All rights reserved.</p>
+          </div>
+          <div className="mt-8 pt-8 border-t text-center text-sm text-muted-foreground">
+            <p>&copy; {new Date().getFullYear()} Terra Industries. All rights reserved.</p>
+          </div>
         </div>
       </div>
     </footer>

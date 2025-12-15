@@ -67,58 +67,60 @@ export default async function HomePage({
   const { data: posts, pagination } = await getPosts(page, 12, search)
 
   return (
-    <div className="container py-12">
-      {/* Hero Section */}
-      <div className="mb-12 text-center">
-        <h1 className="text-4xl md:text-5xl font-bold mb-4">
-          Terra Industries Blog
-        </h1>
-        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-          Thought leadership and insights on autonomous defense systems for Africa&apos;s critical infrastructure
-        </p>
-      </div>
-
-      {search && (
-        <div className="mb-6">
-          <p className="text-sm text-muted-foreground">
-            Search results for &quot;{search}&quot; ({pagination.total} {pagination.total === 1 ? 'post' : 'posts'})
+    <div className="flex justify-center">
+      <div className="w-full max-w-6xl px-4 py-12">
+        {/* Hero Section */}
+        <div className="mb-12 text-center">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+            Terra Industries Blog
+          </h1>
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            Thought leadership and insights on autonomous defense systems for Africa&apos;s critical infrastructure
           </p>
         </div>
-      )}
 
-      {posts.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-muted-foreground">
-            {search ? `No posts found for "${search}".` : 'No posts found.'}
-          </p>
-        </div>
-      ) : (
-        <>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-            {posts.map((post) => (
-              <PostCard key={post.id} post={post} />
-            ))}
+        {search && (
+          <div className="mb-6 text-left">
+            <p className="text-sm text-muted-foreground">
+              Search results for &quot;{search}&quot; ({pagination.total} {pagination.total === 1 ? 'post' : 'posts'})
+            </p>
           </div>
+        )}
 
-          {pagination.totalPages > 1 && (
-            <div className="flex justify-center items-center gap-4">
-              {page > 1 && (
-                <Button asChild variant="outline">
-                  <a href={`/?page=${page - 1}${search ? `&search=${encodeURIComponent(search)}` : ''}`}>Previous</a>
-                </Button>
-              )}
-              <span className="text-sm text-muted-foreground">
-                Page {pagination.page} of {pagination.totalPages}
-              </span>
-              {page < pagination.totalPages && (
-                <Button asChild variant="outline">
-                  <a href={`/?page=${page + 1}${search ? `&search=${encodeURIComponent(search)}` : ''}`}>Next</a>
-                </Button>
-              )}
+        {posts.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-muted-foreground">
+              {search ? `No posts found for "${search}".` : 'No posts found.'}
+            </p>
+          </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+              {posts.map((post) => (
+                <PostCard key={post.id} post={post} />
+              ))}
             </div>
-          )}
-        </>
-      )}
+
+            {pagination.totalPages > 1 && (
+              <div className="flex justify-center items-center gap-4">
+                {page > 1 && (
+                  <Button asChild variant="outline">
+                    <a href={`/?page=${page - 1}${search ? `&search=${encodeURIComponent(search)}` : ''}`}>Previous</a>
+                  </Button>
+                )}
+                <span className="text-sm text-muted-foreground">
+                  Page {pagination.page} of {pagination.totalPages}
+                </span>
+                {page < pagination.totalPages && (
+                  <Button asChild variant="outline">
+                    <a href={`/?page=${page + 1}${search ? `&search=${encodeURIComponent(search)}` : ''}`}>Next</a>
+                  </Button>
+                )}
+              </div>
+            )}
+          </>
+        )}
+      </div>
     </div>
   )
 }

@@ -11,14 +11,26 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center">
-        <div className="mr-4 flex">
-          <Link href="/" className="mr-6 flex items-center space-x-2 hover:opacity-80 transition-opacity">
+      <div className="flex h-16 w-full items-center px-4">
+        {/* Left: Brand (sticks to far left) */}
+        <div className="flex-1 flex items-center">
+          <Link
+            href="/"
+            className="mr-6 flex items-center space-x-2 hover:opacity-80 transition-opacity"
+          >
             <span className="font-bold text-xl">Terra Industries</span>
           </Link>
         </div>
-        <SearchBarWrapper />
-        <div className="flex items-center space-x-2">
+
+        {/* Center: Search (max width, centered) */}
+        <div className="flex-1 flex justify-center">
+          <div className="w-full max-w-2xl">
+            <SearchBarWrapper />
+          </div>
+        </div>
+
+        {/* Right: Theme toggle (sticks to far right) */}
+        <div className="flex-1 flex items-center justify-end">
           <Button
             variant="ghost"
             size="icon"

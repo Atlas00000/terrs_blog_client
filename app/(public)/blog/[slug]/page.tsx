@@ -67,8 +67,8 @@ export default async function PostPage({
       : post.coverImage
 
   return (
-    <article className="container py-12">
-      <div className="max-w-4xl mx-auto">
+    <article className="flex justify-center">
+      <div className="w-full max-w-4xl px-4 py-12">
         {/* Header */}
         <header className="mb-8">
           <div className="flex flex-wrap gap-2 mb-4">
