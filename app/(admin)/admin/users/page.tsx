@@ -23,7 +23,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { UserForm } from '@/components/admin/user-form'
+import dynamic from 'next/dynamic'
+
+const UserForm = dynamic(() => import('@/components/admin/user-form').then(mod => ({ default: mod.UserForm })), {
+  ssr: false
+})
 
 export default function UsersPage() {
   const [users, setUsers] = useState<User[]>([])

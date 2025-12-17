@@ -148,12 +148,19 @@ export function SearchBar() {
     router.push('/')
   }
 
+  const suggestionsId = 'search-suggestions'
+  const inputId = 'search-input'
+
   return (
     <div ref={containerRef} className="flex-1 max-w-2xl mx-4 relative">
-      <form onSubmit={handleSearch}>
+      <form onSubmit={handleSearch} role="search" aria-label="Search posts">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Search 
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" 
+            aria-hidden="true"
+          />
           <Input
+            id={inputId}
             type="search"
             placeholder="Search posts..."
             value={query}
@@ -162,6 +169,12 @@ export function SearchBar() {
             onKeyDown={handleKeyDown}
             className="pl-10 pr-10"
             disabled={isSearching}
+            aria-label="Search posts"
+            aria-expanded={showSuggestions && suggestions.length > 0}
+            aria-controls={showSuggestions && suggestions.length > 0 ? suggestionsId : undefined}
+            aria-autocomplete="list"
+            aria-haspopup="listbox"
+            aria-describedby={isSearching ? 'search-status' : undefined}
           />
           {query && (
             <Button
@@ -169,32 +182,48 @@ export function SearchBar() {
               variant="ghost"
               size="sm"
               onClick={handleClear}
-              className="absolute right-1 top-1/2 transform -translate-y-1/2 h-7 w-7 p-0"
+              className="absolute right-1 top-1/2 transform -translate-y-1/2 h-7 w-7 p-0 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              aria-label="Clear search"
+              title="Clear search"
             >
-              <X className="h-4 w-4" />
+              <X className="h-4 w-4" aria-hidden="true" />
+              <span className="sr-only">Clear search</span>
             </Button>
           )}
         </div>
+        {isSearching && (
+          <div id="search-status" className="sr-only" aria-live="polite" aria-atomic="true">
+            Searching...
+          </div>
+        )}
       </form>
 
       {/* Suggestions Dropdown */}
       {showSuggestions && suggestions.length > 0 && (
-        <div className="absolute top-full mt-2 w-full bg-background border rounded-lg shadow-lg z-50 max-h-96 overflow-y-auto">
+        <div 
+          id={suggestionsId}
+          role="listbox"
+          aria-label="Search suggestions"
+          className="absolute top-full mt-2 w-full bg-background dark:bg-card border border-slate-200 dark:border-slate-800 rounded-lg shadow-lg dark:shadow-2xl z-50 max-h-96 overflow-y-auto"
+        >
           <div className="p-2">
-            <div className="text-xs font-semibold text-muted-foreground px-3 py-2">
-              Suggestions
+            <div className="text-xs font-semibold text-muted-foreground px-3 py-2" id="suggestions-label">
+              Suggestions ({suggestions.length})
             </div>
             {suggestions.map((post, index) => (
               <button
                 key={post.id}
                 type="button"
+                role="option"
+                aria-selected={index === selectedIndex}
                 onClick={() => handleSuggestionClick(post.slug)}
+                title={`Read: ${post.title}`}
                 className={cn(
-                  'w-full text-left px-3 py-2 rounded-md hover:bg-accent transition-colors',
-                  index === selectedIndex && 'bg-accent'
+                  'w-full text-left px-3 py-2 rounded-md hover:bg-accent dark:hover:bg-slate-800/50 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2',
+                  index === selectedIndex && 'bg-accent dark:bg-slate-800/50'
                 )}
               >
-                <div className="font-medium text-sm mb-1 line-clamp-1">{post.title}</div>
+                <div className="font-medium text-sm mb-1 line-clamp-1 text-foreground">{post.title}</div>
                 {post.excerpt && (
                   <div className="text-xs text-muted-foreground line-clamp-2 mb-1">
                     {post.excerpt}
@@ -202,22 +231,34 @@ export function SearchBar() {
                 )}
                 {post.readingTime && (
                   <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                    <Clock className="h-3 w-3" />
+                    <Clock className="h-3 w-3" aria-hidden="true" />
                     <span>{post.readingTime} min read</span>
                   </div>
                 )}
               </button>
             ))}
-            <div className="border-t mt-2 pt-2">
+            <div className="border-t border-slate-200 dark:border-slate-800 mt-2 pt-2">
               <button
                 type="button"
                 onClick={handleSearch}
-                className="w-full text-left px-3 py-2 text-sm text-primary hover:bg-accent rounded-md transition-colors"
+                className="w-full text-left px-3 py-2 text-sm text-primary hover:bg-accent dark:hover:bg-slate-800/50 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                aria-label={`View all results for ${query}`}
+                title={`View all results for ${query}`}
               >
                 View all results for &quot;{query}&quot;
               </button>
             </div>
           </div>
+        </div>
+      )}
+      {showSuggestions && suggestions.length === 0 && query.length >= 2 && (
+        <div 
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+          className="sr-only"
+        >
+          No suggestions found
         </div>
       )}
     </div>

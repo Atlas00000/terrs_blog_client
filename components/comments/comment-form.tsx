@@ -58,12 +58,12 @@ export function CommentForm({ slug, parentId, onSubmitted }: CommentFormProps) {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       {error && (
-        <div className="p-3 text-sm text-destructive bg-destructive/10 rounded-md">
+        <div className="p-3 text-sm text-destructive bg-destructive/10 dark:bg-destructive/20 rounded-md border border-destructive/20 dark:border-destructive/30">
           {error}
         </div>
       )}
       <div className="space-y-2">
-        <label className="text-sm font-medium">Name *</label>
+        <label className="text-sm font-medium text-foreground">Name *</label>
         <Input
           value={form.authorName}
           onChange={handleChange('authorName')}
@@ -73,7 +73,7 @@ export function CommentForm({ slug, parentId, onSubmitted }: CommentFormProps) {
         />
       </div>
       <div className="space-y-2">
-        <label className="text-sm font-medium">Email *</label>
+        <label className="text-sm font-medium text-foreground">Email *</label>
         <Input
           type="email"
           value={form.authorEmail}
@@ -84,7 +84,7 @@ export function CommentForm({ slug, parentId, onSubmitted }: CommentFormProps) {
         />
       </div>
       <div className="space-y-2">
-        <label className="text-sm font-medium">Website (optional)</label>
+        <label className="text-sm font-medium text-foreground">Website (optional)</label>
         <Input
           type="url"
           value={form.authorUrl}
@@ -94,7 +94,7 @@ export function CommentForm({ slug, parentId, onSubmitted }: CommentFormProps) {
         />
       </div>
       <div className="space-y-2">
-        <label className="text-sm font-medium">Comment *</label>
+        <label className="text-sm font-medium text-foreground">Comment *</label>
         <Textarea
           value={form.content}
           onChange={handleChange('content')}

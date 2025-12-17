@@ -22,7 +22,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { CategoryForm } from '@/components/admin/category-form'
+import dynamic from 'next/dynamic'
+
+const CategoryForm = dynamic(() => import('@/components/admin/category-form').then(mod => ({ default: mod.CategoryForm })), {
+  ssr: false
+})
 
 export default function CategoriesPage() {
   const [categories, setCategories] = useState<Category[]>([])

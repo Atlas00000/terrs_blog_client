@@ -4,6 +4,8 @@ import './globals.css'
 import { ThemeProvider } from '@/components/theme-provider'
 import { AuthProvider } from '@/context/auth-context'
 import { Toaster } from '@/components/ui/toaster'
+import { InitialLoader } from '@/components/shared/initial-loader'
+import { TooltipProvider } from '@/components/ui/tooltip'
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -23,17 +25,25 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <link rel="preconnect" href="https://pub-5ec1edc03f9e4856bb104bfd7a595f59.r2.dev" />
+        <link rel="dns-prefetch" href="https://pub-5ec1edc03f9e4856bb104bfd7a595f59.r2.dev" />
+      </head>
       <body className={inter.variable}>
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          defaultTheme="light"
           enableSystem
           disableTransitionOnChange
         >
-          <AuthProvider>
-            {children}
-            <Toaster />
-          </AuthProvider>
+          <TooltipProvider delayDuration={300}>
+            <AuthProvider>
+              <InitialLoader>
+                {children}
+              </InitialLoader>
+              <Toaster />
+            </AuthProvider>
+          </TooltipProvider>
         </ThemeProvider>
       </body>
     </html>

@@ -3,6 +3,7 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/context/auth-context'
+import { LoadingScreen } from '@/components/shared/loading-screen'
 
 interface ProtectedRouteProps {
   children: React.ReactNode
@@ -34,11 +35,7 @@ export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) 
   }, [isAuthenticated, isLoading, user, requiredRole, router])
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-muted-foreground">Loading...</div>
-      </div>
-    )
+    return <LoadingScreen />
   }
 
   if (!isAuthenticated) {

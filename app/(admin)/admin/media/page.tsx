@@ -16,7 +16,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { CopyUrlButton } from '@/components/media/copy-url-button'
+import dynamic from 'next/dynamic'
+
+const CopyUrlButton = dynamic(() => import('@/components/media/copy-url-button').then(mod => ({ default: mod.CopyUrlButton })), {
+  ssr: false
+})
 
 export default function MediaPage() {
   const [media, setMedia] = useState<Media[]>([])

@@ -63,8 +63,8 @@ export function CommentList({ slug }: CommentListProps) {
     <div className="space-y-4">
       <div className="space-y-4">
         {data.data.map((comment) => (
-          <div key={comment.id} className="border rounded-lg p-4 space-y-2">
-            <div className="text-sm font-semibold">{comment.authorName}</div>
+          <div key={comment.id} className="border border-slate-200 dark:border-slate-800 rounded-lg p-4 space-y-2 bg-card dark:bg-card">
+            <div className="text-sm font-semibold text-foreground">{comment.authorName}</div>
             {comment.authorUrl && (
               <a
                 href={comment.authorUrl}
@@ -78,7 +78,7 @@ export function CommentList({ slug }: CommentListProps) {
             <div className="text-sm text-muted-foreground">
               {new Date(comment.createdAt).toLocaleString()}
             </div>
-            <div className="text-sm whitespace-pre-wrap">{comment.content}</div>
+            <div className="text-sm whitespace-pre-wrap text-foreground">{comment.content}</div>
           </div>
         ))}
       </div>
@@ -90,6 +90,7 @@ export function CommentList({ slug }: CommentListProps) {
             size="sm"
             disabled={page <= 1}
             onClick={() => setPage((p) => Math.max(1, p - 1))}
+            className="border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600"
           >
             Previous
           </Button>
@@ -101,6 +102,7 @@ export function CommentList({ slug }: CommentListProps) {
             size="sm"
             disabled={page >= pagination.totalPages}
             onClick={() => setPage((p) => Math.min(pagination.totalPages, p + 1))}
+            className="border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600"
           >
             Next
           </Button>

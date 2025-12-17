@@ -1,6 +1,10 @@
 'use client'
 
-import { PostForm } from '@/components/admin/post-form'
+import dynamic from 'next/dynamic'
+
+const PostForm = dynamic(() => import('@/components/admin/post-form').then(mod => ({ default: mod.PostForm })), {
+  loading: () => <div className="p-8">Loading form...</div>
+})
 
 export default function EditPostPage({
   params,

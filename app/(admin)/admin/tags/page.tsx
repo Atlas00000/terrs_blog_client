@@ -22,7 +22,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { TagForm } from '@/components/admin/tag-form'
+import dynamic from 'next/dynamic'
+
+const TagForm = dynamic(() => import('@/components/admin/tag-form').then(mod => ({ default: mod.TagForm })), {
+  ssr: false
+})
 
 export default function TagsPage() {
   const [tags, setTags] = useState<Tag[]>([])

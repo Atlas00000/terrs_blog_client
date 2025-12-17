@@ -2,9 +2,18 @@
 
 import { AuthProvider } from '@/context/auth-context'
 import { ProtectedRoute } from '@/components/auth/protected-route'
-import { AdminSidebar } from '@/components/admin/admin-sidebar'
-import { AdminHeader } from '@/components/admin/admin-header'
+import dynamic from 'next/dynamic'
 import { usePathname } from 'next/navigation'
+
+const AdminSidebar = dynamic(() => import('@/components/admin/admin-sidebar').then(mod => ({ default: mod.AdminSidebar })), {
+  ssr: false,
+  loading: () => <div className="w-64 bg-background border-r" />
+})
+
+const AdminHeader = dynamic(() => import('@/components/admin/admin-header').then(mod => ({ default: mod.AdminHeader })), {
+  ssr: false,
+  loading: () => <div className="h-16 bg-background border-b" />
+})
 
 export default function AdminLayout({
   children,
