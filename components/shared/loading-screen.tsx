@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import Image from 'next/image'
 import { useTheme } from 'next-themes'
 
 export function LoadingScreen() {
@@ -96,22 +95,6 @@ export function LoadingScreen() {
 
       {/* Main content */}
       <div className="relative z-10 flex flex-col items-center justify-center space-y-8">
-        {/* Brand logo */}
-        <div className="relative">
-          <Image
-            src="https://pub-5ec1edc03f9e4856bb104bfd7a595f59.r2.dev/2025/12/terra-logo-1766007088872-vqasieccsyq.png"
-            alt="Terra Industries Logo"
-            width={200}
-            height={67}
-            sizes="(max-width: 640px) 200px, (max-width: 768px) 240px, 280px"
-            className="h-16 sm:h-20 md:h-24 w-auto dark:invert animate-fade-in-out"
-            priority
-            quality={90}
-          />
-          {/* Glow effect */}
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 via-blue-600/20 to-blue-500/20 dark:from-blue-400/30 dark:via-blue-500/30 dark:to-blue-400/30 blur-2xl -z-10 animate-pulse-slow" />
-        </div>
-
         {/* Loading indicator */}
         <div className="relative flex items-center justify-center">
           {/* Outer ring */}
